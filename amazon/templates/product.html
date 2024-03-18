@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.product_name }}{% endblock %}
+
+{% block contents %}
+<h1>{{ product.product_name }}の詳細</h1>
+<p>
+  {% if product.product_image %}
+  商品画像↓<br>
+  <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="auto" height="auto">
+  {% endif %}
+</p>
+<h3>ブランド: {{ product.brand }}</h3>
+<h3>カテゴリ: {{ product.category }}</h3>
+<h3>価格: ¥{{ product.price }}</h3>
+<h3>商品説明: {{ product.description|default:"なし" }}</h3>
+<h3>評価 ☆: {{ product.average_rating|default:"0.0" }}</h3>
+<h3>出品者: {{ product.seller.username }}</h3>
+<p>{% if product_in_cart %}
+<form action="{% url 'amazon:remove_from_cart' product_id=product.product_id %}" method="post">
+  {% csrf_token %}
+  <button type="submit">カートから削除</button>
+</form>
+{% else %}
+<form action="{% url 'amazon:add_to_cart' product_id=product.product_id %}" method="post">
+  {% csrf_token %}
+  <button type="submit">カートに追加</button>
+</form>
+{% endif %}
+</p>
+<hr style="height: 5px">
+<!-- レビュー表示 -->
+<h2>レビュー</h2>
+{% if product.review_set.all %}
+<ul>
+  {% for review in product.review_set.all %}
+  <li>
+    <p>投稿者: {{ review.customer_id }}</p>
+    <p>評価: {{ review.rating }}</p>
+    <p>コメント: {{ review.comment }}</p>
+    <form id="delete-review-form-{{ review.review_id }}"
+      action="{% url 'amazon:review_delete' review_id=review.review_id %}" method="post">
+      {% csrf_token %}
+      <button class="delete-review-button" type="button">削除</button>
+    </form>
+    <p></p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>まだレビューがありません。</p>
+{% endif %}
+
+{% if not user_reviewed %}
+<a href="{% url 'amazon:review' product_id=product.product_id %}">
+  <h2>レビューを書く</h2>
+</a>
+{% endif %}
+<hr style="height: 5px;">
+<br><br>
+<form id="delete-product-form" action="{% url 'amazon:product_delete' product_id=product.product_id %}" method="post">
+  {% csrf_token %}
+  <button id="delete-product-button" type="submit">商品を削除</button>
+</form>
+<br>
+<p><a href="{% url 'amazon:index' %}">戻る</a></p>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var deleteButton = document.getElementById('delete-product-button');
+    var deleteForm = document.getElementById('delete-product-form');
+
+    deleteButton.addEventListener('click', function (event) {
+      // ユーザーに確認メッセージを表示する
+      var confirmation = confirm('本当にこの商品を削除しますか？');
+
+      // 確認メッセージの結果に応じて、フォームを送信するかキャンセルする
+      if (!confirmation) {
+        event.preventDefault(); // フォームの送信をキャンセルする
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var deleteButtons = document.querySelectorAll('.delete-review-button');
+
+    deleteButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        var reviewId = button.closest('form').id.split('-')[3]; // レビューIDを取得する
+
+        // ユーザーに確認メッセージを表示する
+        var confirmation = confirm('本当にこのレビューを削除しますか？');
+
+        // 確認メッセージの結果に応じて、フォームを送信するかキャンセルする
+        if (confirmation) {
+          document.getElementById('delete-review-form-' + reviewId).submit(); // 対応するフォームを送信する
+        } else {
+          event.preventDefault(); // フォームの送信をキャンセルする
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

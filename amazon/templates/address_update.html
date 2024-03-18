@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}住所更新{% endblock %}
+
+{% block contents %}
+<h3>住所を更新する</h3>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">更新</button>
+</form>
+{% endblock %}

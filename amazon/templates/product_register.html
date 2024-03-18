@@ -1,0 +1,13 @@
+<!-- create_product.html -->
+{% extends 'base.html' %}
+
+{% block title %}商品登録{% endblock %}
+
+{% block contents %}
+<h2>商品登録</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">登録する</button>
+</form>
+{% endblock %}

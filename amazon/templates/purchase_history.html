@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}購入履歴{% endblock %}
+
+{% block contents %}
+<h3>購入履歴</h3>
+<br>
+{% if user_orders %}
+<ul>
+  {% for order_item in user_orders %}
+  <li>
+    <a href="{% url 'amazon:product' product_id=order_item.product.product_id %}">
+      <p>商品名: {{ order_item.product.product_name }}</p>
+    </a>
+    <p>数量: {{ order_item.quantity }}</p>
+    <p>合計金額: ¥{{ total_price }}</p>
+    <p>購入日時: {{ order_item.order.created_at }}</p>
+    <hr>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>購入履歴がありません。</p>
+{% endif %}
+{% endblock %}

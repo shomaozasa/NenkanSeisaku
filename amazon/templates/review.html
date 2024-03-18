@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}レビュー投稿{% endblock %}
+
+{% block contents %}
+<h3>商品レビュー投稿ページ</h3>
+<br>
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="fieldWrapper">
+    {{ form.rating.label_tag }}
+    {{ form.rating }}
+    {{ form.rating.errors }}
+  </div>
+  <br>
+  <div class="fieldWrapper">
+    {{ form.comment.label_tag }}
+    {{ form.comment }}
+    {{ form.comment.errors }}
+  </div>
+  <input type="submit" value="投稿する">
+</form>
+
+{% endblock %}
