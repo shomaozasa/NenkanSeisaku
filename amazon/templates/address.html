@@ -3,13 +3,11 @@
 {% block title %}お届け先{% endblock %}
 
 {% block contents %}
-<h3>あなたの住所</h3>
-{% for personal in address %}
-<h2 style="border: solid;">{{ personal.address }}</h2>
+<h3>・あなたの住所</h3>
+<h2 style="border: solid;">{{ address }}</h2>
 <p></p>
 <a href="{% url 'amazon:update_address' pk=user.pk %}">
     <h2>住所を更新する</h2>
 </a>
 <a href="{% url 'amazon:index' %}">戻る</a>
-{% endfor %}
 {% endblock %}
