@@ -22,10 +22,12 @@
   <button type="submit">カートから削除</button>
 </form>
 {% else %}
+  {% if user.is_authenticated %}
 <form action="{% url 'amazon:add_to_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
   <button type="submit">カートに追加</button>
 </form>
+  {% endif %}
 {% endif %}
 </p>
 <hr style="height: 5px">
@@ -51,11 +53,14 @@
 <p>まだレビューがありません。</p>
 {% endif %}
 
-{% if not user_reviewed %}
-<a href="{% url 'amazon:review' product_id=product.product_id %}">
-  <h2>レビューを書く</h2>
-</a>
+{% if user.is_authenticated %}
+  {% if not user_reviewed %}
+  <a href="{% url 'amazon:review' product_id=product.product_id %}">
+    <h2>レビューを書く</h2>
+  </a>
+  {% endif %}
 {% endif %}
+
 <hr style="height: 5px;">
 <br><br>
 <form id="delete-product-form" action="{% url 'amazon:product_delete' product_id=product.product_id %}" method="post">
