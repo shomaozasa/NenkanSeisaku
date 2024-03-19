@@ -231,7 +231,7 @@ class PurchaseHistoryView(View):
 
         # 商品ごとの合計金額
         for order_item in user_orders:
-            order_item.price = order_item.product.price * order_item.quantity
+            order_item.price = intcomma(order_item.product.price * order_item.quantity)
             
         # 合計金額
         total_price = sum(item.product.price * item.quantity for item in user_orders)
