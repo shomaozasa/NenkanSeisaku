@@ -27,6 +27,8 @@
   {% csrf_token %}
   <button type="submit">カートに追加</button>
 </form>
+  {% else %}
+<a href="{% url 'accounts:login' %}">※カート機能はログインが必要です※</a>
   {% endif %}
 {% endif %}
 </p>
@@ -59,6 +61,8 @@
     <h2>レビューを書く</h2>
   </a>
   {% endif %}
+{% else %}
+<a href="{% url 'accounts:login' %}">※レビュー投稿はログインが必要です※</a>
 {% endif %}
 
 <hr style="height: 5px;">
