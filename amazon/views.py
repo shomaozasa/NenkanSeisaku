@@ -29,6 +29,7 @@ class ProductDetailView(DetailView):
     template_name = 'product.html'  # 商品の詳細ページのテンプレート名
     context_object_name = 'product'  # テンプレートに渡されるコンテキスト変数名
     pk_url_kwarg = 'product_id'  # 商品IDを受け取るためのURLパターン名
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product_id = self.kwargs.get(self.pk_url_kwarg)
@@ -37,11 +38,11 @@ class ProductDetailView(DetailView):
             # ユーザーがその商品に対してレビューを行ったかどうかを確認
             user_reviewed = product.review_set.filter(customer_id=self.request.user).exists()
             context['user_reviewed'] = user_reviewed
-        cart = Cart.objects.filter(user=self.request.user).first()
-        product_in_cart = False
-        if cart:
-            product_in_cart = cart.cartitem_set.filter(product=product).exists()
-        context['product_in_cart'] = product_in_cart
+            cart = Cart.objects.filter(user=self.request.user).first()
+            product_in_cart = False
+            if cart:
+                product_in_cart = cart.cartitem_set.filter(product=product).exists()
+            context['product_in_cart'] = product_in_cart
         return context
 
 def create_product(request):
@@ -116,6 +117,11 @@ class ReviewView(FormView):
         review.customer_id = self.request.user  # ログインユーザーを取得するための処理が必要
         review.save()
         return redirect('amazon:product', product_id=product_id)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('accounts:login'))
+        return super().dispatch(request, *args, **kwargs)
     
 class ReviewDeleteView(View):
     def post(self, request, review_id):
