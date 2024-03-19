@@ -13,11 +13,7 @@
     margin: 10px;
   }
 </style>
-{% if user.is_authenticated %}
-    <p>ようこそ:{{ user }}さん</p>
-{% else %}
-    <p>ようこそ:ゲストさん</p>
-{% endif %}
+<p>ようこそ:{{ user }}</p>
 <h2>商品一覧</h2>
 
 <label for="sort-select">ソート：</label>
