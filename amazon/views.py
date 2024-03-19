@@ -15,17 +15,6 @@ from django.views.generic import TemplateView
 from .forms import AddressUpdateForm
 from .models import CustomUser
 
-class AddressView(TemplateView):
-    template_name = 'address.html'
-    model = CustomUser
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = CustomUser.objects.all()
-        context['form'] = AddressUpdateForm()  # 住所更新用のフォームをコンテキストに追加
-        return context
-
-
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -79,8 +68,10 @@ class AddressView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['address'] = CustomUser.objects.all()
-        context['user'] = CustomUser.objects.get(pk=self.request.user.pk)  # ログインユーザーの情報を取得
+        if self.request.user.is_authenticated:
+            user_address = CustomUser.objects.filter(pk=self.request.user.pk).values_list('address', flat=True).first()
+            context['address'] = user_address
+            context['user'] = self.request.user
         return context
     
 class AddressUpdateView(UpdateView):
