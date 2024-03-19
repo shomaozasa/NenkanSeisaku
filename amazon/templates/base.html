@@ -72,7 +72,7 @@
         <form id="search-form" action="{% url 'amazon:product_search' %}" method="GET">
             <input type="text" id="search-input" name="q" placeholder="商品名,ブランド,カテゴリ,価格を検索"
                 style="width: 350px; height: 50px;">
-            <button type="submit">検索</button>
+            <button type="submit" id="search">検索</button>
         </form>
             <select id="language-select">
                 <option value="ja">日本語</option>
@@ -125,10 +125,13 @@
         document.getElementById('language-select').addEventListener('change', function () {
             var selectedLanguage = this.value;
             var searchInput = document.getElementById('search-input');
+            var search = document.getElementById("search");
             if (selectedLanguage === 'ja') {
                 searchInput.placeholder = "商品名、ブランド、カテゴリ、価格を検索";
+                search.innerText = "検索";
             } else if (selectedLanguage === 'en') {
                 searchInput.placeholder = "Search for product name, brand, category, price";
+                search.innerText = "Search";
             }
         });
         document.getElementById('language-select').addEventListener('change', function () {
