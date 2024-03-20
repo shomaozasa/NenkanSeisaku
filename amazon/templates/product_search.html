@@ -13,9 +13,9 @@
     margin: 10px;
   }
 </style>
-<h2>商品検索結果</h2>
+<h3>▼--<span id="product_search_results">商品検索結果</span>--▼</h3>
 {% if query %}
-<p>検索文字: {{ query }}</p>
+<p><span id="search_words">検索文字</span>: {{ query }}</p>
 {% endif %}
 
 {% if message %}
@@ -37,12 +37,11 @@
   <li data-price="{{ product.price }}" data-name="{{ product.product_name }}"
     data-rating="{{ product.average_rating }}">
     <strong><a href="{% url 'amazon:product' product_id=product.product_id %}">{{ product.product_name }}</a></strong><br>
-    ブランド: {{ product.brand }}<br>
-    カテゴリ: {{ product.category }}<br>
-    価格: ¥{{ product.price }}<br>
-    評価: ☆{{ product.average_rating|default:"0.0" }}<br>
+    <span id="brand">ブランド</span>: {{ product.brand }}<br>
+    <span id="category">カテゴリ</span>: {{ product.category }}<br>
+    <span id="price">価格</span>: ¥{{ product.price }}<br>
+    <span id="rating">評価</span>: ☆{{ product.average_rating|default:"0.0" }}<br>
     {% if product.product_image %}
-    商品画像↓<br>
     <a href="{% url 'amazon:product' product_id=product.product_id %}"><img src="{{ product.product_image.url }}"
         alt="{{ product.product_name }}" width="100" height="100"></a>
     {% endif %}
@@ -83,7 +82,58 @@
         productList.appendChild(product);
     });
 });
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var dropdown = document.getElementById("sort-select");
+      var option1 = dropdown.querySelector('option[value="price-asc"]');
+      var option2 = dropdown.querySelector('option[value="price-desc"]');
+      var option3 = dropdown.querySelector('option[value="name-asc"]');
+      var option4 = dropdown.querySelector('option[value="name-desc"]');
+      var option5 = dropdown.querySelector('option[value="rating-asc"]');
+      var option6 = dropdown.querySelector('option[value="rating-desc"]');
+      if (selectedLanguage === 'ja') {
+        option1.innerText = "価格順(昇順)";
+        option2.innerText = "価格順(降順)";
+        option3.innerText = "名前順(昇順)";
+        option4.innerText = "名前順(降順)";
+        option5.innerText = "評価順(昇順)";
+        option6.innerText = "評価順(降順)";
+      }
+      else if (selectedLanguage === 'en') {
+        option1.innerText = "By price(asc)";
+        option2.innerText = "By price(desc)";
+        option3.innerText = "By name(asc)";
+        option4.innerText = "By name(desc)";
+        option5.innerText = "By rating(asc)";
+        option6.innerText = "By rating(desc)";
+      }
 
+      dropdown.dispatchEvent(new Event('change'));
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var product_search_results = document.getElementById("product_search_results");
+      var search_words = document.getElementById("search_words");
+      var brand = document.getElementById("brand");
+      var category = document.getElementById("category");
+      var price = document.getElementById("price");
+      var rating = document.getElementById("rating");
+      if (selectedLanguage === 'ja') {
+        product_search_results.innerText = "商品検索結果";
+        search_words.innerText = "検索文字";
+        brand.innerText = "ブランド";
+        category.innerText = "カテゴリ";
+        price.innerText = "価格";
+        rating.innerText = "評価";
+      }
+      else if (selectedLanguage === 'en') {
+        product_search_results.innerText = "Product search results";
+        search_words.innerText = "Search words";
+        brand.innerText = "Brand";
+        category.innerText = "Category";
+        price.innerText = "Price";
+        rating.innerText = "Rating";
+      }
+})
 </script>
-
 {% endblock %}
