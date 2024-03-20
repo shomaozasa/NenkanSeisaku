@@ -2,10 +2,27 @@
 {% block title %}住所更新{% endblock %}
 
 {% block contents %}
-<h3>住所を更新する</h3>
+<h3>▼--<span id="update_address">住所の更新</span>--▼</h3>
+<br>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">更新</button>
+  <button type="submit"><span id="update">更新</span></button>
 </form>
+
+<script>
+  document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var update_address = document.getElementById("update_address");
+      var update = document.getElementById("update");
+      if (selectedLanguage === 'ja') {
+        update_address.innerText = "住所を更新する";
+        update.innerText = "更新";
+      }
+      else if (selectedLanguage === 'en') {
+        update_address.innerText = "Update your address";
+        update.innerText = "Update"
+      }
+  })
+</script>
 {% endblock %}
