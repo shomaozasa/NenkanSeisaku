@@ -1,13 +1,29 @@
-<!-- create_product.html -->
 {% extends 'base.html' %}
 
 {% block title %}商品登録{% endblock %}
 
 {% block contents %}
-<h2>商品登録</h2>
+<h3>▼--<span id="register_product">商品登録</span>--▼</h3>
+<br>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">登録する</button>
+  <button type="submit"><span id="register">登録</span></button>
 </form>
+
+<script>
+  document.getElementById('language-select').addEventListener('change', function () {
+        var selectedLanguage = this.value;
+        var register_product = document.getElementById("register_product");
+        var register = document.getElementById("register");
+        if (selectedLanguage === 'ja') {
+          register_product.innerText = "商品登録";
+          register.innerText = "登録";
+        }
+        else if (selectedLanguage === 'en') {
+          register_product.innerText = "Register a product";
+          register.innerText = "Register";
+        }
+  })
+</script>
 {% endblock %}
