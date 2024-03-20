@@ -10,8 +10,8 @@
 
       <div class="col-md-8 col-lg-6">
 
-        <h3>サインアップ</h3>
-
+        <h3>▼--<span id="signup">サインアップ</span>--▼</h3>
+        <br>
         <form method="post">
           {% csrf_token %}
 
@@ -29,7 +29,7 @@
           {% endfor %}
 
           <p style="color:red">
-            ※メールアドレスはパスワードをリセットする際に必要になりますので、登録をお願いします。
+            ※<span id="required_email">メールアドレスはパスワードをリセットする際に必要になりますので、登録をお願いします。</span>
           </p>
 
           <input type="submit" value="Sign up">
@@ -38,10 +38,29 @@
         <br>
         <p>
           <a href="{% url 'amazon:index' %}">
-            登録をやめてトップページに戻る
+            <span id="back">トップへ</span>
           </a>
         </p>
       </div>
     </div>
   </div>
+
+<script>
+    document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var signup = document.getElementById("signup");
+      var required_email = document.getElementById("required_email");
+      var back = document.getElementById("back");
+      if (selectedLanguage === 'ja') {
+        signup.innerText = "サインアップ";
+        required_email.innerText = "メールアドレスはパスワードをリセットする際に必要になりますので、登録をお願いします。";
+        back.innerText = "トップへ";
+      }
+      else if (selectedLanguage === 'en') {
+        signup.innerText = "Sign up";
+        required_email.innerText = "Your email address is required to reset your password, so please register.";
+        back.innerText = "Back to top";
+      }
+    })
+</script>
 {% endblock %}
