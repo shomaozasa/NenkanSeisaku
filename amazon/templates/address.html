@@ -3,12 +3,31 @@
 {% block title %}お届け先{% endblock %}
 
 {% block contents %}
-<h3>・{{ user }}さんの住所</h3>
+<h3>▼--・{{ user }}<span id="address">さんの住所</span>--▼</h3>
 <h2 style="border: solid;">{{ address }}</h2>
 <p></p>
 <a href="{% url 'amazon:update_address' pk=user.pk %}">
-    <h3>住所を更新する</h3>
+    <h3><span id="update">住所を更新する</span></h3>
 </a>
 <br>
-<a href="{% url 'amazon:cart' %}">戻る</a>
+<a href="{% url 'amazon:cart' %}"><span id="back">戻る</span></a>
+
+<script>
+document.getElementById('language-select').addEventListener('change', function () {
+    var selectedLanguage = this.value;
+    var adderess = document.getElementById('address');
+    var update = document.getElementById('update');
+    var back = document.getElementById('back');
+    if (selectedLanguage === 'ja') {
+        address.innerText = "さんの住所";
+        update.innerText = "住所を更新する";
+        back.innerText = "戻る";
+    }
+    else if (selectedLanguage === 'en') {
+        address.innerText = "'s Address";
+        update.innerText = "Update your address";
+        back.innerText = "back";
+    } 
+})
+</script>
 {% endblock %}
