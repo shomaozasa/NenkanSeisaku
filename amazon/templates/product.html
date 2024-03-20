@@ -3,76 +3,75 @@
 {% block title %}{{ product.product_name }}{% endblock %}
 
 {% block contents %}
-<h1>{{ product.product_name }}の詳細</h1>
+<h3>▼--{{ product.product_name }}<span id="details">の詳細</span>--▼</h3>
 <p>
   {% if product.product_image %}
-  商品画像↓<br>
   <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="auto" height="auto">
   {% endif %}
 </p>
-<h3>ブランド: {{ product.brand }}</h3>
-<h3>カテゴリ: {{ product.category }}</h3>
-<h3>価格: ¥{{ product.price }}</h3>
-<h3>商品説明: {{ product.description|default:"なし" }}</h3>
-<h3>評価 ☆: {{ product.average_rating|default:"0.0" }}</h3>
-<h3>出品者: {{ product.seller.username }}</h3>
+<h4><span id="brand">ブランド</span>: {{ product.brand }}</h4>
+<h4><span id="category">カテゴリ</span>: {{ product.category }}</h4>
+<h4><span id="price">価格</span>: ¥{{ product.price }}</h4>
+<h4><span id="description">商品説明</span>: {{ product.description|default:"なし" }}</h4>
+<h4><span id="rating">評価</span> ☆: {{ product.average_rating|default:"0.0" }}</h4>
+<h4><span id="seller">出品者</span>: {{ product.seller.username }}</h4>
 <p>{% if product_in_cart %}
 <form action="{% url 'amazon:remove_from_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button type="submit">カートから削除</button>
+  <button type="submit"><span id="remove_from_cart">カートから削除</span></button>
 </form>
 {% else %}
   {% if user.is_authenticated %}
 <form action="{% url 'amazon:add_to_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button type="submit">カートに追加</button>
+  <button type="submit"><span id="add_to_cart">カートに追加</span></button>
 </form>
   {% else %}
-<a href="{% url 'accounts:login' %}">※カート機能はログインが必要です※</a>
+<a href="{% url 'accounts:login' %}">※<span id="cart_login">カート機能はログインが必要です</span>※</a>
   {% endif %}
 {% endif %}
 </p>
 <hr style="height: 5px">
-<!-- レビュー表示 -->
-<h2>レビュー</h2>
+
+<h3>▼--<span id="review">レビュー</span>--▼</h3>
 {% if product.review_set.all %}
 <ul>
   {% for review in product.review_set.all %}
   <li>
-    <p>投稿者: {{ review.customer_id }}</p>
-    <p>評価: {{ review.rating }}</p>
-    <p>コメント: {{ review.comment }}</p>
+    <p><span id="contributor">投稿者</span>: {{ review.customer_id }}</p>
+    <p><span id="review_rating">評価</span>: {{ review.rating }}</p>
+    <p><span id="comments">コメント</span>: {{ review.comment }}</p>
     <form id="delete-review-form-{{ review.review_id }}"
       action="{% url 'amazon:review_delete' review_id=review.review_id %}" method="post">
       {% csrf_token %}
-      <button class="delete-review-button" type="button">削除</button>
+      <button class="delete-review-button" type="button"><span id="review_delete">削除</span></button>
     </form>
     <p></p>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<p>まだレビューがありません。</p>
+<p><span id="no_reviews_yet">まだレビューがありません。</span></p>
 {% endif %}
 
 {% if user.is_authenticated %}
   {% if not user_reviewed %}
   <a href="{% url 'amazon:review' product_id=product.product_id %}">
-    <h2>レビューを書く</h2>
+    <h4><span id="write_a_review">レビューを書く</span></h4>
   </a>
   {% endif %}
 {% else %}
-<a href="{% url 'accounts:login' %}">※レビュー投稿はログインが必要です※</a>
+<a href="{% url 'accounts:login' %}">※<span id="review_login">レビューを投稿するにはログインが必要です</span>※</a>
 {% endif %}
 
 <hr style="height: 5px;">
 <br><br>
 <form id="delete-product-form" action="{% url 'amazon:product_delete' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button id="delete-product-button" type="submit">商品を削除</button>
+  <button id="delete-product-button" type="submit"><span id="delete_a_product">商品を削除</span></button>
 </form>
 <br>
-<p><a href="{% url 'amazon:index' %}">戻る</a></p>
+<p><a href="{% url 'amazon:index' %}"><span id="back">戻る</span></a></p>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -108,5 +107,131 @@
       });
     });
   });
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var details = document.getElementById("details");
+      var brand = document.getElementById("brand");
+      var category = document.getElementById("category");
+      var price = document.getElementById("price");
+      var description = document.getElementById("description");
+      var rating = document.getElementById("rating");
+      var seller = document.getElementById("seller");
+      var remove_from_cart = document.getElementById("remove_from_cart");
+      var add_to_cart = document.getElementById("add_to_cart");
+      if (selectedLanguage === 'ja') {
+        details.innerText = "の詳細";
+        brand.innerText = "ブランド";
+        category.innerText = "カテゴリ";
+        price.innerText = "価格";
+        description.innerText = "商品説明";
+        rating.innerText = "評価";
+        seller.innerText = "出品者";
+        remove_from_cart.innerText = "カートから削除";
+        add_to_cart.innerText = "カートに追加";
+      }
+      else if (selectedLanguage === 'en') {
+        details.innerText = " Details";
+        brand.innerText = "Brand";
+        category.innerText = "Category";
+        price.innerText = "Price";
+        description.innerText = "Description";
+        rating.innerText = "Rating";
+        seller.innerText = "Seller";
+        remove_from_cart.innerText = "Remove from cart";
+        add_to_cart.innerText = "Add to cart";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var add_to_cart = document.getElementById("add_to_cart");
+      if (selectedLanguage === 'ja') {
+        add_to_cart.innerText = "カートに追加";
+      }
+      else if (selectedLanguage === 'en') {
+        add_to_cart.innerText = "Add to cart";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var cart_login = document.getElementById("cart_login");
+      if (selectedLanguage === 'ja') {
+        cart_login.innerText = "カート機能はログインが必要です";
+      }
+      else if (selectedLanguage === 'en') {
+        cart_login.innerText = "The cart function requires a login";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var contributor = document.getElementById("contributor");
+      var review_rating = document.getElementById("review_rating");
+      var comments = document.getElementById("comments");
+      if (selectedLanguage === 'ja') {
+        contributor.innerText = "投稿者";
+        review_rating.innerText = "評価";
+        comments.innerText = "コメント";
+      }
+      else if (selectedLanguage === 'en') {
+        contributor.innerText = "Contributor";
+        review_rating.innerText = "Review";
+        comments.innerText = "Comments";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var review_delete = document.getElementById("review_delete");
+      if (selectedLanguage === 'ja') {
+        review_delete.innerText = "削除";
+      }
+      else if (selectedLanguage === 'en') {
+        review_delete.innerText = "Delete";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var no_reviews_yet = document.getElementById("no_reviews_yet");
+      var write_a_review = document.getElementById("write_a_review");
+      if (selectedLanguage === 'ja') {
+        no_reviews_yet.innerText = "まだレビューがありません。";
+        write_a_review.innerText = "レビューを書く";
+      }
+      else if (selectedLanguage === 'en') {
+        no_reviews_yet.innerText = "No reviews yet.";
+        write_a_review.innerText = "Write a review";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var review = document.getElementById("review");
+      if (selectedLanguage === 'ja') {
+        review.innerText = "レビュー";
+      }
+      else if (selectedLanguage === 'en') {
+        review.innerText = "Review";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var review_login = document.getElementById("review_login");
+      if (selectedLanguage === 'ja') {
+        review_login.innerText = "レビューを投稿するにはログインが必要です";
+      }
+      else if (selectedLanguage === 'en') {
+        review_login.innerText = "Login to post a review";
+      }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var delete_a_product = document.getElementById("delete_a_product");
+      var back = document.getElementById("back");
+      if (selectedLanguage === 'ja') {
+        delete_a_product.innerText = "商品を削除";
+        back.innerText = "戻る";
+      }
+      else if (selectedLanguage === 'en') {
+        delete_a_product.innerText = "Delete a product";
+        back.innerText = "Back";
+      }
+})
 </script>
 {% endblock %}
