@@ -3,7 +3,22 @@
 {% block title %}購入成功！{% endblock %}
 
 {% block contents %}
-<h2>商品の購入に成功しました！</h2><br>
-<p><a href="{% url 'amazon:index'%}" id="top">トップへ戻る</a></p>
+<h3><span id="success">商品の購入に成功しました！</span></h3><br>
+<p><a href="{% url 'amazon:index'%}" id="top"><span id="back">トップへ</span></a></p>
 
+<script>
+    document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var success = document.getElementById("success");
+      var back = document.getElementById("back");
+      if (selectedLanguage === 'ja') {
+        success.innerText = "商品の購入に成功しました！";
+        back.innerText = "トップへ";
+      }
+      else if (selectedLanguage === 'en') {
+        success.innerText = "You have successfully purchased the product!";
+        back.innerText = "Back to top";
+      }
+    })
+</script>
 {% endblock %}
