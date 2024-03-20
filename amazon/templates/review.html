@@ -3,7 +3,7 @@
 {% block title %}レビュー投稿{% endblock %}
 
 {% block contents %}
-<h3>商品レビュー投稿ページ</h3>
+<h3>▼--<span id="review">レビュー投稿</span>--▼</h3>
 <br>
 <form method="post">
   {% csrf_token %}
@@ -19,7 +19,23 @@
     {{ form.comment }}
     {{ form.comment.errors }}
   </div>
-  <input type="submit" value="投稿する">
+  <br>
+  <button type="submit"><span id="post_button">投稿</span></button>
 </form>
 
+<script>
+  document.getElementById('language-select').addEventListener('change', function () {
+    var selectedLanguage = this.value;
+    var review = document.getElementById("review");
+    var post_button = document.getElementById("post_button");
+    if (selectedLanguage === 'ja') {
+      review.innerText = "レビュー投稿";
+      post_button.innerText = "投稿";
+    }
+    else if (selectedLanguage === 'en') {
+      review.innerText = "Write a review";
+      post_button.innerText = "Post";
+    }
+  })
+</script>
 {% endblock %}
