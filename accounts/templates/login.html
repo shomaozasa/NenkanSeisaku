@@ -6,7 +6,7 @@
 
 {% block contents %}
   {% if form.errors %}
-    <p style="color:red; text-align: center; font-size: large;">ユーザー名とパスワードが一致しません。</p>
+    <p style="color:red; text-align: center; font-size: large;"><span id="mismatch">ユーザー名とパスワードが一致しません。</span></p>
   {% endif %}
 
   <form method="post" class="text-center">
@@ -27,7 +27,7 @@
            autocapitalize="none"
            autocomplete="username"
            class="form-control"
-           placeholder="ユーザー名"
+           placeholder="User name"
            required autofocus>
     
     <label for="Password" class="visually-hidden">Password</label>
@@ -37,16 +37,16 @@
             id="password"
             autocomplete="current-password"
             class="form-control"
-            placeholder="パスワード"
+            placeholder="Password"
             required autofocus>
 
-    <input class="w-100 btn btn-lg btn-primary"
+    <button class="w-100 btn btn-lg btn-primary"
             type="submit"
-            value="ログイン">
+            ><span id="login">ログイン</span></button>
 
     <br><br>
-    <p><a href="{% url 'accounts:signup' %}">アカウントを作成していない方はこちら</a></p>
-    <p><a href="{% url 'password_reset' %}">パスワードを忘れましたか？</a></p>
+    <p><a href="{% url 'accounts:signup' %}"><span id="signup">アカウントを作成していない方はこちら</span></a></p>
+    <p><a href="{% url 'password_reset' %}"><span id="reset_password">パスワードを忘れましたか？</span></a></p>
 
     <input type="hidden"
             name="next"
@@ -54,7 +54,38 @@
   </form>
 
   <br>
-  <p style="text-align: center;"><a href="{% url 'amazon:index' %}">トップへ戻る</a></p>
+  <p style="text-align: center;"><a href="{% url 'amazon:index' %}"><span id="back">トップへ</span></a></p>
 
+  <script>
+    document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var mismatch = document.getElementById("mismatch");
+      if (selectedLanguage === 'ja') {
+        mismatch.innerText = "ユーザー名とパスワードが一致しません。";
+      }
+      else if (selectedLanguage === 'en') {
+        mismatch.innerText = "The username and password do not match.";
+      }
+    })
+    document.getElementById('language-select').addEventListener('change', function () {
+      var selectedLanguage = this.value;
+      var login = document.getElementById("login");
+      var signup = document.getElementById("signup");
+      var reset_password = document.getElementById("reset_password");
+      var back = document.getElementById("back");
+      if (selectedLanguage === 'ja') {
+        login.innerText = "ログイン";
+        signup.innerText = "アカウントを作成していない方はこちら";
+        reset_password.innerText = "パスワードを忘れましたか？";
+        back.innerText = "トップへ";
+      }
+      else if (selectedLanguage === 'en') {
+        login.innerText = "Login";
+        signup.innerText = "If you haven't created an account, click here.";
+        reset_password.innerText = "Forgot your password?";
+        back.innerText = "Back to top";
+      }
+    })
+  </script>
 {% endblock %}
 
