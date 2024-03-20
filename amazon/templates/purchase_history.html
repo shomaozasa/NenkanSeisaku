@@ -3,26 +3,72 @@
 {% block title %}購入履歴{% endblock %}
 
 {% block contents %}
-<h3>購入履歴</h3>
+<h3>▼--<span id="purchase_history">購入履歴</span>--▼</h3>
 <br>
 {% if user_orders %}
-<p>合計金額: ¥{{ total_price }}</p>
+<h3><span id="total_price">合計金額</span>: ¥{{ total_price }}</h3>
 <ul>
   {% for order_item in user_orders %}
   <li>
     <a href="{% url 'amazon:product' product_id=order_item.product.product_id %}">
-      <p>商品名: {{ order_item.product.product_name }}</p>
+      <p>{{ order_item.product.product_name }}</p>
     </a>
     <a href="{% url 'amazon:product' product_id=order_item.product.product_id %}"><img src="{{ order_item.product.product_image.url }}"
       alt="{{ order_item.product.product_name }}" width="100" height="100"></a>
-    <p>数量: {{ order_item.quantity }}</p>
-    <p>価格: ¥{{ order_item.product.price }} * {{ order_item.quantity }} = ¥{{ order_item.price }}</p>
-    <p>購入日時: {{ order_item.order.created_at }}</p>
+    <p><span id="quantity">数量</span>: {{ order_item.quantity }}</p>
+    <p><span id="price">価格</span>: ¥{{ order_item.product.price }} * {{ order_item.quantity }} = ¥{{ order_item.price }}</p>
+    <p><span id="date_of_purchase">購入日時</span>: {{ order_item.order.created_at }}</p>
+    <p><span id="order_no.">注文番号</span>: {{ order_item.order.order_id }}</p>
     <hr>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<p>購入履歴がありません。</p>
+<p><span id="not_purchase_history">購入履歴がありません。</span></p>
 {% endif %}
+
+<script>
+document.getElementById('language-select').addEventListener('change', function () {
+  var selectedLanguage = this.value;
+  var purchase_history = document.getElementById("purchase_history");
+  var total_price = document.getElementById("total_price");
+  var quantity = document.getElementById("quantity");
+  var price = document.getElementById("price");
+  if (selectedLanguage === 'ja') {
+    purchase_history.innerText = "購入履歴";
+    total_price.innerText = "合計金額";
+    quantity.innerText = "数量";
+    price.innerText = "価格";
+  }
+  else if (selectedLanguage === 'en') {
+    purchase_history.innerText = "Purchase history";
+    total_price.innerText = "Total price";
+    quantity.innerText = "Quantity";
+    price.innerText = "Price";
+  }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+  var selectedLanguage = this.value;
+  var date_of_purchase = getElementById("date_of_purchase");
+  var order_no = getElementById("order_no.")
+  if (selectedLanguage === 'ja') {
+    date_of_purchase.innerText = "購入日時";
+    order_no.innerText = "注文番号";
+  }
+  else if (selectedLanguage === 'en') {
+    date_of_purchase.innerText = "Date of purchase";
+    order_no.innerText = "Order No.";
+  }
+})
+document.getElementById('language-select').addEventListener('change', function () {
+  var selectedLanguage = this.value;
+  var not_purchase_history = document.getElementById("not_purchase_history");
+  if (selectedLanguage === 'ja') {
+    not_purchase_history.innerText = "購入履歴がありません。"
+  }
+  else if (selectedLanguage === 'en') {
+    not_purchase_history.innerText = "You don't have a purchase history";
+  }
+})
+</script>
 {% endblock %}
