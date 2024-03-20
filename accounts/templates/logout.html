@@ -11,7 +11,23 @@
 
                     <div class="col offset-4 py-4">
 
-                    <h3>ログアウトしました!</h3>
+                    <h3><span id="logout">ログアウトしました！</span></h3>
+                    <br>
+                    <p><a href="{% url 'amazon:index' %}"><span id="back">トップへ</span></a></p>
 
-                    <p><a href="{% url 'amazon:index' %}">トップページへ</a></p>
+                    <script>
+                        document.getElementById('language-select').addEventListener('change', function () {
+                          var selectedLanguage = this.value;
+                          var logout = document.getElementById("logout");
+                          var back = document.getElementById("back");
+                          if (selectedLanguage === 'ja') {
+                            logout.innerText = "ログアウトしました！";
+                            back.innerText = "トップへ";
+                          }
+                          else if (selectedLanguage === 'en') {
+                            logout.innerText = "You are logged out!";
+                            back.innerText = "Back to top";
+                          }
+                        })
+                    </script>
             {% endblock %}
