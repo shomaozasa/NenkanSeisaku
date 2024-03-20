@@ -10,10 +10,26 @@
 
 
                 <div class="col offset-4 py-4">
-                    <h1>登録が完了しました!</h1>
-
-                    <p><a href="{% url 'accounts:login' %}">ログインはこちら</a></p>
+                    <h3><span id="complete">登録が完了しました!</span></h3>
+                    <br>
+                    <p><a href="{% url 'accounts:login' %}"><span id="login">ログインはこちら</span></a></p>
                 </div>
             </div>
         </div>
+
+        <script>
+            document.getElementById('language-select').addEventListener('change', function () {
+              var selectedLanguage = this.value;
+              var complete = document.getElementById("complete");
+              var login = document.getElementById("login");
+              if (selectedLanguage === 'ja') {
+                complete.innerText = "登録が完了しました！";
+                login.innerText = "ログインはこちら";
+              }
+              else if (selectedLanguage === 'en') {
+                complete.innerText = "Registration is complete!";
+                login.innerText = "Login here";
+              }
+            })
+        </script>
         {% endblock %}
