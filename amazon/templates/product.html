@@ -63,7 +63,10 @@
 {% if user.is_authenticated %}
   {% if not user_reviewed %}
   <a href="{% url 'amazon:review' product_id=product.product_id %}">
-    <h4><span id="write_a_review">レビューを書く</span></h4>
+    <h4><span class="material-symbols-outlined">
+          sell
+        </span>
+      <span id="write_a_review">レビューを書く</span></h4>
   </a>
   {% endif %}
 {% else %}
