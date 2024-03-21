@@ -61,11 +61,19 @@
   <div class="swiper-wrapper">
     {% for product in products %}
     <li class="swiper-slide" data-price="{{ product.price }}" data-name="{{ product.product_name }}" data-rating="{{ product.average_rating }}">
-    <strong><a href="{% url 'amazon:product' product_id=product.product_id %}">{{ product.product_name }}</a></strong><br>
-    <span id="brand">ブランド</span>: {{ product.brand }}<br>
-    <span id="category">カテゴリ</span>: {{ product.category }}<br>
-    <span id="price">価格</span>: ¥{{ product.price }}<br>
-    <span id="rating">評価</span>: ☆{{ product.average_rating|default:"0.0" }}<br>
+    <strong><a href="{% url 'amazon:product' product_id=product.product_id %}">・{{ product.product_name }}</a></strong><br>
+    <span class="material-symbols-outlined">
+brand_family
+</span> ブランド: {{ product.brand }}<br>
+    <span class="material-symbols-outlined">
+category
+</span> カテゴリ: {{ product.category }}<br>
+    <span class="material-symbols-outlined">
+paid
+</span> 価格: ¥{{ product.price }}<br>
+    <span class="material-symbols-outlined">
+hotel_class
+</span> 評価: ☆{{ product.average_rating|default:"0.0" }}<br>
     {% if product.product_image %}
     <a href="{% url 'amazon:product' product_id=product.product_id %}"><img src="{{ product.product_image.url }}"
         alt="{{ product.product_name }}" width="200" height="200"></a>
