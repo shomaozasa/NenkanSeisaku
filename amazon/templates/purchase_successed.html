@@ -4,7 +4,11 @@
 
 {% block contents %}
 <h3><span id="success">商品の購入に成功しました！</span></h3><br>
-<p><a href="{% url 'amazon:index'%}" id="top"><span id="back">トップへ</span></a></p>
+<p><a href="{% url 'amazon:index'%}" id="top">
+    <span class="material-symbols-outlined">
+    exit_to_app
+    </span>
+    <span id="back">トップへ</span></a></p>
 
 <script>
     document.getElementById('language-select').addEventListener('change', function () {
