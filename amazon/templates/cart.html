@@ -46,7 +46,10 @@
 {% endfor %}
 <br>
 <a href="{% url 'amazon:purchase' %}">
-  <h3><span id="checkout">レジに進む</span></h3>
+  <h3><span class="material-symbols-outlined">
+        shopping_cart_checkout
+      </span>
+    <span id="checkout">レジに進む</span></h3>
 </a>
 {% else %}
 <p><span id="no_products_in_the_cart">カートに商品がありません。</span></p>
