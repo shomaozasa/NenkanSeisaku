@@ -89,7 +89,11 @@ person_pin
 <br><br>
 <form id="delete-product-form" action="{% url 'amazon:product_delete' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button id="delete-product-button" type="submit"><span id="delete_a_product">商品を削除</span></button>
+  <button id="delete-product-button" type="submit">
+    <span class="material-symbols-outlined">
+      warning
+    </span>
+    <span id="delete_a_product">商品を削除</span></button>
 </form>
 <br>
 <p><a href="{% url 'amazon:index' %}">
