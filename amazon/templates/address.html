@@ -10,7 +10,11 @@
     <h3><span id="update">住所を更新する</span></h3>
 </a>
 <br>
-<a href="{% url 'amazon:cart' %}"><span id="back">戻る</span></a>
+<a href="{% url 'amazon:cart' %}">
+    <span class="material-symbols-outlined">
+    exit_to_app
+    </span>
+    <span id="back">戻る</span></a>
 
 <script>
 document.getElementById('language-select').addEventListener('change', function () {
