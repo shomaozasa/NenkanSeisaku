@@ -13,7 +13,11 @@
 
                     <h3><span id="logout">ログアウトしました！</span></h3>
                     <br>
-                    <p><a href="{% url 'amazon:index' %}"><span id="back">トップへ</span></a></p>
+                    <p><a href="{% url 'amazon:index' %}">
+                                <span class="material-symbols-outlined">
+                                        exit_to_app
+                                </span>
+                                <span id="back">トップへ</span></a></p>
 
                     <script>
                         document.getElementById('language-select').addEventListener('change', function () {
