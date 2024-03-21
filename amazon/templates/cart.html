@@ -21,7 +21,7 @@
 {% for item in cart_items %}
 <ul>
   <li>
-    <a href="{% url 'amazon:product' product_id=item.product.product_id %}"><span id="product_name">商品名</span>: {{ item.product.product_name }}</a><br>
+    <a href="{% url 'amazon:product' product_id=item.product.product_id %}">{{ item.product.product_name }}</a><br>
     <span id="quantity">数量</span>
     <form action="{% url 'amazon:cart_update' cart_item_id=item.id %}" method="post" style="display: inline;">
       {% csrf_token %}
@@ -60,18 +60,15 @@ document.getElementById('language-select').addEventListener('change', function (
       var selectedLanguage = this.value;
       var verify_address = document.getElementById("verify_address");
       var products_in_the_cart = document.getElementById("products_in_the_cart");
-      var product_name = document.getElementById("product_name");
       var quantity = document.getElementById("quantity");
       if (selectedLanguage === 'ja') {
           verify_address.innerText = "住所の確認";
           products_in_the_cart.innerText = "カートに入っている商品";
-          product_name.innerText = "商品名";
           quantity.innerText = "数量";
       }
       else if (selectedLanguage === 'en') {
           verify_address.innerText = "Verify your address";
           products_in_the_cart.innerText = "Products in the cart";
-          product_name.innerText = "Product name";
           quantity.innerText = "Quantity";
       }
   })
