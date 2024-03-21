@@ -71,7 +71,11 @@
   <button id="delete-product-button" type="submit"><span id="delete_a_product">商品を削除</span></button>
 </form>
 <br>
-<p><a href="{% url 'amazon:index' %}"><span id="back">戻る</span></a></p>
+<p><a href="{% url 'amazon:index' %}">
+  <span class="material-symbols-outlined">
+    exit_to_app
+  </span>
+  <span id="back">戻る</span></a></p>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
