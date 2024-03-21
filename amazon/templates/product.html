@@ -18,13 +18,19 @@
 <p>{% if product_in_cart %}
 <form action="{% url 'amazon:remove_from_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button type="submit"><span id="remove_from_cart">カートから削除</span></button>
+  <button type="submit"><span class="material-symbols-outlined">
+                          remove_shopping_cart
+                        </span>
+    <span id="remove_from_cart">カートから削除</span></button>
 </form>
 {% else %}
   {% if user.is_authenticated %}
 <form action="{% url 'amazon:add_to_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
-  <button type="submit"><span id="add_to_cart">カートに追加</span></button>
+  <button type="submit"><span class="material-symbols-outlined">
+                          add_shopping_cart
+                        </span>
+    <span id="add_to_cart">カートに追加</span></button>
 </form>
   {% else %}
 <a href="{% url 'accounts:login' %}">※<span id="cart_login">カート機能はログインが必要です</span>※</a>
