@@ -53,7 +53,11 @@
   <button type="submit"><span id="buy">購入する</span></button>
 </form>
 <br>
-<a href="{% url 'amazon:cart' %}"><span id="back">カートに戻る</span></a>
+<a href="{% url 'amazon:cart' %}">
+  <span class="material-symbols-outlined">
+shopping_cart
+  </span>
+  <span id="back">カートに戻る</span></a>
 
 <script>
   document.getElementById('language-select').addEventListener('change', function () {
