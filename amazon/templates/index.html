@@ -3,6 +3,13 @@
 {% block title %}Amezonトップ{% endblock %}
 
 {% block contents %}
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+
 <style>
   ul {
     display: flex;
@@ -40,6 +47,28 @@
     {% if product.product_image %}
     <a href="{% url 'amazon:product' product_id=product.product_id %}"><img src="{{ product.product_image.url }}"
         alt="{{ product.product_name }}" width="100" height="100"></a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+<br>
+<hr style="height: 3px">
+<br>
+
+<h3>▼--<span id="recommended">おすすめの商品</span>--▼</h3>
+<ul id="product-list" class="swiper-container">
+  <div class="swiper-wrapper">
+    {% for product in products %}
+    <li class="swiper-slide" data-price="{{ product.price }}" data-name="{{ product.product_name }}" data-rating="{{ product.average_rating }}">
+    <strong><a href="{% url 'amazon:product' product_id=product.product_id %}">{{ product.product_name }}</a></strong><br>
+    <span id="brand">ブランド</span>: {{ product.brand }}<br>
+    <span id="category">カテゴリ</span>: {{ product.category }}<br>
+    <span id="price">価格</span>: ¥{{ product.price }}<br>
+    <span id="rating">評価</span>: ☆{{ product.average_rating|default:"0.0" }}<br>
+    {% if product.product_image %}
+    <a href="{% url 'amazon:product' product_id=product.product_id %}"><img src="{{ product.product_image.url }}"
+        alt="{{ product.product_name }}" width="200" height="200"></a>
     {% endif %}
   </li>
   {% endfor %}
@@ -86,6 +115,7 @@ document.getElementById('language-select').addEventListener('change', function (
       var category = document.getElementById("category");
       var price = document.getElementById("price");
       var rating = document.getElementById("rating");
+      var recommended = document.getElementById("recommended");
       if (selectedLanguage === 'ja') {
         welcome.innerText = "ようこそ";
         product_list.innerText = "商品一覧";
@@ -94,6 +124,7 @@ document.getElementById('language-select').addEventListener('change', function (
         category.innerText = "カテゴリ";
         price.innerText = "価格";
         rating.innerText = "評価";
+        recommended.innerText = "おすすめの商品";
       }
       else if (selectedLanguage === 'en') {
         welcome.innerText = "Welcome";
@@ -103,6 +134,7 @@ document.getElementById('language-select').addEventListener('change', function (
         category.innerText = "Category";
         price.innerText = "Price";
         rating.innerText = "Rating";
+        recommended.innerText = "Recommended products";
       }
 })
 document.getElementById('language-select').addEventListener('change', function () {
@@ -133,6 +165,16 @@ document.getElementById('language-select').addEventListener('change', function (
 
       dropdown.dispatchEvent(new Event('change'));
 })
+document.addEventListener('DOMContentLoaded', function () {
+  var mySwiper = new Swiper('.swiper-container', {
+    // オプション設定（必要に応じてカスタマイズ）
+    loop: true,
+    autoplay: {
+      delay: 3500, // 自動再生の間隔（ミリ秒）
+    },
+  });
+});
+
 </script>
 
 {% endblock %}
