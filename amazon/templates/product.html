@@ -9,12 +9,24 @@
   <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="auto" height="auto">
   {% endif %}
 </p>
-<h4><span id="brand">ブランド</span>: {{ product.brand }}</h4>
-<h4><span id="category">カテゴリ</span>: {{ product.category }}</h4>
-<h4><span id="price">価格</span>: ¥{{ product.price }}</h4>
-<h4><span id="description">商品説明</span>: {{ product.description|default:"なし" }}</h4>
-<h4><span id="rating">評価</span> ☆: {{ product.average_rating|default:"0.0" }}</h4>
-<h4><span id="seller">出品者</span>: {{ product.seller.username }}</h4>
+<h4><span class="material-symbols-outlined">
+brand_family
+</span><span id="brand"> ブランド</span>: {{ product.brand }}</h4>
+<h4><span class="material-symbols-outlined">
+category
+</span><span id="category"> カテゴリ</span>: {{ product.category }}</h4>
+<h4><span class="material-symbols-outlined">
+paid
+</span><span id="price"> 価格</span>: ¥{{ product.price }}</h4>
+<h4><span class="material-symbols-outlined">
+description
+</span><span id="description"> 商品説明</span>: {{ product.description|default:"なし" }}</h4>
+<h4><span class="material-symbols-outlined">
+hotel_class
+</span><span id="rating"> 評価</span> ☆: {{ product.average_rating|default:"0.0" }}</h4>
+<h4><span class="material-symbols-outlined">
+person_pin
+</span><span id="seller"> 出品者</span>: {{ product.seller.username }}</h4>
 <p>{% if product_in_cart %}
 <form action="{% url 'amazon:remove_from_cart' product_id=product.product_id %}" method="post">
   {% csrf_token %}
