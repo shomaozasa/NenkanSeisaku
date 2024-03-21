@@ -19,7 +19,7 @@
     <p><span id="price">価格</span>: ¥{{ order_item.product.price }} * {{ order_item.quantity }} = ¥{{ order_item.price }}</p>
     <p><span id="date_of_purchase">購入日時</span>: {{ order_item.order.created_at }}</p>
     <p><span id="order_no.">注文番号</span>: {{ order_item.order.order_id }}</p>
-    <hr>
+    <hr style="height: 3px">
   </li>
   {% endfor %}
 </ul>
