@@ -15,7 +15,7 @@
 </style>
 <h3>▼--<span id="purchase_confirmation">購入情報確認</span>--▼</h3>
 <br>
-<h3><span id="product">購入商品</span></h3>
+<h3><span id="product">・購入商品</span></h3>
 <hr style="height: 3px">
 <ul>
   {% for item in cart_items %}
@@ -31,11 +31,11 @@
 </ul>
 <hr style="height: 3px">
 <br>
-<h3><span id="total_price">合計金額</span></h3>
+<h3><span id="total_price">・合計金額</span></h3>
 <h4>¥{{ total_price }}</h4>
 <hr style="height: 3px">
 <br>
-<h3><span id="shipping_address">お届け先</span></h3>
+<h3><span id="shipping_address">・お届け先</span></h3>
 <ul>
   {% for address in addresses %}
   <li>
