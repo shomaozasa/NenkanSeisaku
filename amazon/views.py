@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 from .forms import AddressUpdateForm
 from .models import CustomUser
 
+# 商品一覧
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -23,11 +24,12 @@ class IndexView(TemplateView):
         context['products'] = Product.objects.all()
         context['user'] = self.request.user.username
         return context
-    
+
+# 商品詳細
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'product.html'  # 商品の詳細ページのテンプレート名
-    context_object_name = 'product'  # テンプレートに渡されるコンテキスト変数名
+    template_name = 'product.html'
+    context_object_name = 'product' 
     pk_url_kwarg = 'product_id'  # 商品IDを受け取るためのURLパターン名
     
     def get_context_data(self, **kwargs):
@@ -38,13 +40,16 @@ class ProductDetailView(DetailView):
             # ユーザーがその商品に対してレビューを行ったかどうかを確認
             user_reviewed = product.review_set.filter(customer_id=self.request.user).exists()
             context['user_reviewed'] = user_reviewed
+            # カート内の情報を取得
             cart = Cart.objects.filter(user=self.request.user).first()
             product_in_cart = False
             if cart:
+                # カート内に閲覧中の商品があるか確認
                 product_in_cart = cart.cartitem_set.filter(product=product).exists()
             context['product_in_cart'] = product_in_cart
         return context
 
+# 新しい商品を登録
 def create_product(request):
     if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
@@ -52,17 +57,19 @@ def create_product(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('amazon:index')  # 商品一覧ページにリダイレクト
+            return redirect('amazon:index') 
     else:
         form = ProductForm()
     return render(request, 'product_register.html', {'form': form})
 
+# 商品削除
 class ProductDeleteView(View):
     def post(self, request, product_id):
         product = Product.objects.get(pk=product_id)
         product.delete()
         return redirect('amazon:index')
 
+# 住所表示
 class AddressView(TemplateView):
     template_name = 'address.html'
     model = CustomUser
@@ -74,13 +81,15 @@ class AddressView(TemplateView):
             context['address'] = user_address
             context['user'] = self.request.user
         return context
-    
+
+# 住所更新
 class AddressUpdateView(UpdateView):
-    model = CustomUser  # 住所を更新するユーザーモデル
-    form_class = AddressUpdateForm  # カスタムフォームを指定
-    template_name = 'address_update.html'  # 住所更新用のテンプレート
-    success_url = reverse_lazy('amazon:address')  # 住所更新後のリダイレクト先URL
-    
+    model = CustomUser
+    form_class = AddressUpdateForm 
+    template_name = 'address_update.html'
+    success_url = reverse_lazy('amazon:address') 
+
+# 商品検索
 def Product_Search(request):
     # GETリクエストから検索クエリを取得
     query = request.GET.get('q')
@@ -105,6 +114,7 @@ def Product_Search(request):
     # 検索結果をテンプレートに渡す
     return render(request, 'product_search.html', {'products': products, 'query': query, 'message': message})
 
+# レビュー投稿
 class ReviewView(FormView):
     template_name = 'review.html'
     form_class = ReviewForm
@@ -114,7 +124,7 @@ class ReviewView(FormView):
         product = Product.objects.get(pk=product_id)
         review = form.save(commit=False)
         review.product_id = product
-        review.customer_id = self.request.user  # ログインユーザーを取得するための処理が必要
+        review.customer_id = self.request.user 
         review.save()
         return redirect('amazon:product', product_id=product_id)
 
@@ -122,14 +132,16 @@ class ReviewView(FormView):
         if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
         return super().dispatch(request, *args, **kwargs)
-    
+
+# レビュー削除
 class ReviewDeleteView(View):
     def post(self, request, review_id):
         # レビューを取得して削除する
         review = Review.objects.get(pk=review_id)
         review.delete()
         return redirect('amazon:product', product_id=review.product_id.product_id)
-    
+
+# カートに商品を追加
 class AddToCartView(View):
     def post(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
@@ -138,13 +150,15 @@ class AddToCartView(View):
         cart_item.save()
         return redirect('amazon:product', product_id=product_id)
 
-class RemoveFromCartView(View): #カートから商品を削除(商品ページ)
+# カートから商品を削除（商品ページ）
+class RemoveFromCartView(View):
     def post(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
         cart = Cart.objects.get(user=request.user)
         cart.delete()
         return redirect('amazon:product', product_id=product_id)
-    
+
+# カートページ
 def cart_view(request):
     if not request.user.is_authenticated:
             return redirect(reverse('accounts:login'))
@@ -157,6 +171,7 @@ def cart_view(request):
 
     return render(request, 'cart.html', {'cart_items': cart_items})
 
+# カート内の商品の数量を更新
 class CartUpdateView(View):
     def post(self, request, cart_item_id):
         cart_item = CartItem.objects.get(id=cart_item_id)
@@ -174,17 +189,16 @@ class CartUpdateView(View):
 
         return redirect('amazon:cart')
 
-class CartRemoveView(View): #カートから商品を削除(カートページ)
+# カートから商品を削除（カートページ）
+class CartRemoveView(View):
     def post(self, request, cart_item_id):
         cart_item = CartItem.objects.get(id=cart_item_id)
         cart_item.delete()
         return redirect('amazon:cart')
-    
+
+# 購入処理
 class PurchaseView(View):
     def post(self, request):
-        # お届け先
-        addresses = CustomUser.objects.filter(id=request.user.id).values_list('address', flat=True)
-
         # カート内の商品を取得
         cart_items = CartItem.objects.filter(cart__user=request.user)
 
@@ -221,7 +235,8 @@ class PurchaseView(View):
         addresses = CustomUser.objects.filter(id=request.user.id).values_list('address', flat=True)
 
         return render(request, 'purchase.html', {'cart_items': cart_items, 'total_price': formatted_total_price, 'addresses': addresses})
-    
+
+# 購入履歴
 class PurchaseHistoryView(View):
     def get(self, request):
         if not request.user.is_authenticated:
@@ -233,12 +248,13 @@ class PurchaseHistoryView(View):
         for order_item in user_orders:
             order_item.price = intcomma(order_item.product.price * order_item.quantity)
             
-        # 合計金額
+        # 合計金額を計算
         total_price = sum(item.product.price * item.quantity for item in user_orders)
         formatted_total_price = intcomma(total_price)
 
         # 購入履歴をテンプレートに渡す
         return render(request, 'purchase_history.html', {'user_orders': user_orders, 'total_price': formatted_total_price})
-    
+
+# 購入成功ページ
 class PurchaseSuccessedView(TemplateView):
     template_name = 'purchase_successed.html'
